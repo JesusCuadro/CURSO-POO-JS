@@ -22,63 +22,57 @@ class GlobalClases {
     videoStop(this.videoID);
   }
 }
-
-class comentario {
-  constructor({ autor, fecha, contenido }) {
+class Comentario {
+  constructor({ autor, fecha = undefined, contenido, rol = "estudiante", likes = 0 }) {
     this.autor = autor;
     this.fecha = fecha;
     this.contenido = contenido;
+    this.rol = rol;
+    this.likes = likes;
+  }
+
+  publicar() {
+    console.log(
+      this.autor + " (" + this.rol + ") " + "comento el dia " + this.fecha
+    );
+    console.log(this.likes + " likes");
+    console.log(this.contenido);
   }
 }
 
-const comentario1 = new comentario({
-  autor: "Pepito",
-  fecha: "2/11/2023",
-  contenido: "Muy buena clase",
-});
-
-const comentario2 = new comentario({
-  autor: "Juan",
-  fecha: "24/12/2023",
-  contenido: "Buena explicacion",
-});
-
-const comentario3 = new comentario({
-  autor: "Diego",
-  fecha: "6/1/2023",
-  contenido: "Contento de esta aprendiendo esto",
-});
-
 class clase {
-  constructor({ nombre, descripcion, comentarios = [] }) {
+  constructor({ nombre, descripcion }) {
     this.nombre = nombre;
     this.descripcion = descripcion;
-    this.comentarios = comentarios;
   }
 }
 
 const queEsVariable = new clase({
   nombre: "¿Que es una variable?",
   descripcion: "En esta clase aprenderas las bases de una variable",
-  comentarios: [comentario1],
 });
 
 const queEsCiclo = new clase({
   nombre: "¿Que es un ciclo?",
   descripcion:
     "En esta clase aprenderas las bases de un ciclo y los tipos de ciclos que hay",
-  comentarios: [comentario3],
 });
 
 const queEsFuncion = new clase({
   nombre: "¿Que es una funcion?",
   descripcion:
     "En esta clase aprenderas las bases de una funcion y como podemos aplicarla",
-  comentarios: [comentario2],
 });
 
 class curso {
-  constructor({ nombre, clases = [], areaAprendizaje, profesor, esGratis = false, lang = "español" }) {
+  constructor({
+    nombre,
+    clases = [],
+    areaAprendizaje,
+    profesor,
+    esGratis = false,
+    lang = "español",
+  }) {
     this._nombre = nombre;
     this.clases = clases;
     this.areaAprendizaje = areaAprendizaje;
@@ -106,7 +100,7 @@ const cursoProgramacionBasica = new curso({
   areaAprendizaje: "Tecnologia",
   profesor: "Juan DC",
   esGratis: true,
-  lang: "español"
+  lang: "español",
 });
 
 const cursoBasicoDeJS = new curso({
@@ -115,7 +109,7 @@ const cursoBasicoDeJS = new curso({
   areaAprendizaje: "Tecnologia",
   profesor: "Diego De Granda",
   esGratis: false,
-  lang: "español"
+  lang: "español",
 });
 
 const cursoBasicoPHP = new curso({
@@ -124,7 +118,7 @@ const cursoBasicoPHP = new curso({
   areaAprendizaje: "Tecnologia",
   profesor: "Retax",
   esGratis: false,
-  lang: "english"
+  lang: "english",
 });
 
 class rutaDeAprendizaje {
@@ -164,6 +158,7 @@ class Estudiante {
     usuario,
     twitter = undefined,
     linkedIn = undefined,
+    facebook = undefined,
     cursosAprobados = [],
     rutasDeAprendizaje = [],
   }) {
@@ -173,15 +168,23 @@ class Estudiante {
     this.redesSociales = {
       twitter: twitter,
       linkedIn: linkedIn,
+      facebook: facebook,
     };
 
     this.cursosAprobados = cursosAprobados;
     this.rutasDeAprendizaje = rutasDeAprendizaje;
   }
-}
 
+  publicarComentario(comentarioContenido) {
+    const comentario = new Comentario({
+      contenido: comentarioContenido,
+      autor: this.nombre,
+    });
+    comentario.publicar();
+
+  }
+}
 class EstudianteGratis extends Estudiante {
-  
   constructor(props) {
     super(props);
   }
@@ -195,9 +198,7 @@ class EstudianteGratis extends Estudiante {
       );
     }
   }
-
 }
-
 class EstudianteBasic extends Estudiante {
   constructor(props) {
     super(props);
@@ -212,17 +213,33 @@ class EstudianteBasic extends Estudiante {
       );
     }
   }
-
 }
-
 class EstudianteExpert extends Estudiante {
-  
   constructor(props) {
     super(props);
   }
 
   cursoAprobado(cursoNuevo) {
     this.cursosAprobados.push(cursoNuevo);
+  }
+}
+
+class Profesor extends Estudiante {
+  constructor(props) {
+    super(props);
+  }
+
+  cursoAprobado(cursoNuevo) {
+    this.cursosAprobados.push(cursoNuevo);
+  }
+
+  publicarComentario(comentarioContenido) {
+    const comentario = new Comentario({
+      contenido: comentarioContenido,
+      autor: this.nombre,
+      rol: "profesor",
+    });
+    comentario.publicar();
   }
 
 }
@@ -232,7 +249,7 @@ const Jesus = new EstudianteBasic({
   email: "jesus@gmail.com",
   usuario: "Jexxus",
   linkedIn: "JesusCuadro",
-  cursosAprobados: [cursoBasicoDeJS],
+  cursosAprobados: [cursoBasicoPHP],
   rutasDeAprendizaje: [DesarrolloWeb],
 });
 
@@ -252,4 +269,11 @@ const Mateo = new EstudianteGratis({
   twitter: "Mateow23",
   cursosAprobados: [cursoBasicoDeJS],
   rutasDeAprendizaje: [introduccionProgramacion],
+});
+
+const Freddy = new Profesor({
+  nombre: "Freddy",
+  email: "freddy@gmail.com",
+  usuario: "freddy23",
+  facebook: "Freddy Vega",
 });
